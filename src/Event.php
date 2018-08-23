@@ -49,6 +49,20 @@ class Event
      */
     public static function create(array $properties, string $calendarId = null, $optParams = [])
     {
+        $event = self::make($properties, $calendarId, $optParams);
+
+        return $event->save('insertEvent', $optParams);
+    }
+
+    /**
+     * @param array       $properties
+     * @param string|null $calendarId
+     * @param array       $optParams
+     *
+     * @return Event
+     */
+    public static function make(array $properties, string $calendarId = null, $optParams = [])
+    {
         $event = new static;
 
         $event->calendarId = static::getGoogleCalendar($calendarId)->getCalendarId();
@@ -57,7 +71,7 @@ class Event
             $event->$name = $value;
         }
 
-        return $event->save('insertEvent', $optParams);
+        return $event;
     }
 
     public static function get(Carbon $startDateTime = null, Carbon $endDateTime = null, array $queryParameters = [], string $calendarId = null) : Collection
